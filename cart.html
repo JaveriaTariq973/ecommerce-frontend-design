@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart — Brand</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="js/cart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #F7FAFC; color: #1c1c1c; }
+        a { text-decoration: none !important; color: inherit; }
+
+        /* ══ HEADER ══ */
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 20px clamp(16px,6vw,130px); border-bottom: 1px solid #e8e8e8; background: #fff; gap: 20px; flex-wrap: wrap; }
+        .logoimg img { height: 46px; width: auto; display: block; }
+        .icons { display: flex; gap: clamp(12px,2vw,30px); flex-shrink: 0; margin-left: auto; }
+        .header-icon { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; color: #555; transition: color 0.2s; position: relative; }
+        .header-icon:hover { color: #0D6EFD; }
+        .header-icon i { font-size: 20px; }
+        .header-icon span { font-size: 11px; }
+        .header-bottom { display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(16px,6vw,130px); border-bottom: 1px solid #e8e8e8; background: #fff; flex-wrap: wrap; gap: 8px; }
+        .nav-links { display: flex; align-items: center; gap: clamp(8px,1.5vw,25px); list-style: none; flex-wrap: wrap; }
+        .nav-links li a { color: #1C1C1C; font-size: clamp(13px,1.1vw,16px); font-weight: 500; transition: color 0.2s; white-space: nowrap; }
+        .nav-links li a:hover { color: #0D6EFD; }
+        .has-dropdown { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: clamp(13px,1.1vw,16px); font-weight: 500; white-space: nowrap; }
+
+        /* ══ PAGE TITLE ══ */
+        .page-title-wrap { padding: 24px clamp(16px,3vw,40px) 0; }
+        .page-title-wrap h1 { font-size: 24px; font-weight: 700; }
+
+        /* ══ MAIN LAYOUT ══ */
+        .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 20px; padding: 16px clamp(16px,3vw,40px); align-items: start; }
+
+        /* ══ CART ITEMS ══ */
+        .cart-items-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+        .cart-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 16px; padding: 18px 20px; border-bottom: 1px solid #f0f0f0; align-items: center; }
+        .cart-row:last-child { border-bottom: none; }
+        .cart-img { width: 90px; height: 90px; border-radius: 6px; background: #f9f9f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .cart-img img { width: 100%; height: 100%; object-fit: contain; }
+        .cart-info .name { font-size: 15px; font-weight: 600; color: #1c1c1c; margin-bottom: 4px; }
+        .cart-info .variant { font-size: 13px; color: #888; margin-bottom: 4px; }
+        .cart-info .seller { font-size: 13px; color: #888; margin-bottom: 8px; }
+        .cart-info .actions { display: flex; gap: 16px; font-size: 13px; }
+        .cart-info .actions a { color: #888; cursor: pointer; }
+        .cart-info .actions a:hover { color: #0D6EFD; }
+        .cart-info .actions a.remove-link:hover { color: #e53935; }
+        .cart-right-col { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .cart-price { font-size: 17px; font-weight: 700; color: #1c1c1c; }
+        .qty-select { border: 1px solid #e0e0e0; border-radius: 4px; padding: 6px 10px; font-size: 13px; outline: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .cart-actions-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #f7fafc; }
+        .back-link { font-size: 14px; color: #0D6EFD; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .remove-all-link { font-size: 14px; color: #e53935; cursor: pointer; }
+        .empty-cart { padding: 60px 20px; text-align: center; color: #888; }
+        .empty-cart i { font-size: 48px; color: #ddd; margin-bottom: 14px; display: block; }
+        .empty-cart a { color: #0D6EFD; font-weight: 600; }
+
+        /* ══ SUMMARY ══ */
+        .summary-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+        .coupon-row { display: flex; gap: 8px; }
+        .coupon-row input { flex: 1; border: 1px solid #e0e0e0; border-radius: 4px; padding: 9px 12px; font-size: 13px; outline: none; }
+        .coupon-row input:focus { border-color: #0D6EFD; }
+        .btn-apply-coupon { padding: 9px 16px; background: #1c1c1c; color: #fff; border: none; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; }
+        .summary-row.total { font-size: 18px; font-weight: 700; color: #1c1c1c; border-top: 1px solid #f0f0f0; padding-top: 14px; }
+        .summary-row.discount span:last-child { color: #00A651; }
+        .btn-checkout { width: 100%; padding: 13px; background: #0D6EFD; color: #fff; border: none; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-checkout:hover { background: #0b5ed7; }
+        .btn-checkout:disabled { background: #ccc; cursor: not-allowed; }
+        .pay-icons { display: flex; gap: 8px; justify-content: center; font-size: 22px; color: #aaa; }
+        .trust-badges { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+        .trust-badge { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #555; }
+        .trust-badge i { color: #0D6EFD; font-size: 16px; width: 20px; text-align: center; }
+
+        /* ══ SAVED FOR LATER ══ */
+        .saved-section { margin: 0 clamp(16px,3vw,40px) 20px; }
+        .saved-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+        .saved-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+        .saved-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .saved-card img { width: 100%; height: 110px; object-fit: contain; }
+        .saved-card .s-price { font-size: 15px; font-weight: 700; }
+        .saved-card .s-name { font-size: 12px; color: #888; min-height: 32px; line-height: 1.4; }
+        .btn-move-cart { padding: 8px; background: #fff; color: #0D6EFD; border: 1px solid #0D6EFD; border-radius: 4px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        .btn-move-cart:hover { background: #0D6EFD; color: #fff; }
+
+        /* ══ DEALS BANNER ══ */
+        .deals-banner { margin: 0 clamp(16px,3vw,40px) 20px; background: linear-gradient(135deg, #FF6F00, #FFA000); border-radius: 8px; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .deals-banner h3 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .deals-banner p { font-size: 14px; color: rgba(255,255,255,0.85); }
+        .btn-shop-now { padding: 12px 28px; background: #fff; color: #E65100; border: none; border-radius: 4px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-shop-now:hover { background: #E65100; color: #fff; }
+
+        /* ══ NEWSLETTER ══ */
+        .newsletter { margin: 0 clamp(16px,3vw,40px) 20px; background: #F7F7F7; border: 1px solid #e8e8e8; border-radius: 8px; padding: 32px 40px; text-align: center; }
+        .newsletter h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .newsletter p { font-size: 14px; color: #888; margin-bottom: 20px; }
+        .newsletter-form { display: flex; align-items: center; max-width: 440px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; background: #fff; }
+        .newsletter-form i { padding: 0 12px; color: #aaa; font-size: 15px; }
+        .newsletter-form input { flex: 1; border: none; outline: none; padding: 11px 0; font-size: 14px; font-family: 'Inter', sans-serif; }
+        .newsletter-form button { padding: 11px 24px; background: #0D6EFD; color: #fff; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+        .newsletter-form button:hover { background: #0b5ed7; }
+
+        /* ══ FOOTER ══ */
+        footer { background: #fff; border-top: 1px solid #e8e8e8; }
+        .footer-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1.4fr; gap: clamp(16px,2vw,32px); padding: 40px clamp(16px,8vw,130px); }
+        .footer-brand p { font-size: 16px; line-height: 24px; color: #505050; margin-bottom: 18px; max-width: 200px; margin-top: 14px; }
+        .social-icons { display: flex; gap: 10px; }
+        .social-icons a { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #BDC4CD; background: #BDC4CD; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 14px; transition: background 0.2s, color 0.2s; }
+        .social-icons a:hover { background: #0D6EFD; border-color: #0D6EFD; color: #fff; }
+        .footer-col h4 { font-size: 16px; font-weight: 600; color: #1C1C1C; margin-bottom: 10px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { font-size: 16px; color: #8B96A5; transition: color 0.2s; }
+        .footer-col ul li a:hover { color: #0D6EFD; }
+        .footer-app h4 { font-size: 16px; font-weight: 600; color: #1C1C1C; margin-bottom: 16px; }
+        .app-badges { display: flex; flex-direction: column; gap: 10px; }
+        .app-badge { display: flex; align-items: center; gap: 10px; background: #111; color: #fff; border-radius: 8px; padding: 9px 16px; width: 160px; cursor: pointer; transition: background 0.2s; }
+        .app-badge:hover { background: #333; }
+        .app-badge i { font-size: 22px; }
+        .app-badge-text { display: flex; flex-direction: column; }
+        .app-badge-text .small { font-size: 10px; opacity: 0.8; }
+        .app-badge-text .big { font-size: 13px; font-weight: 600; }
+        .footer-bottom { background: #DEE2E7; display: flex; align-items: center; justify-content: space-between; padding: 20px clamp(16px,8vw,130px); color: #606060; font-size: 16px; flex-wrap: wrap; gap: 10px; }
+        .lang-footer { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+        @media (max-width: 1000px) {
+            .cart-layout { grid-template-columns: 1fr; }
+            .saved-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-top { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .cart-row { grid-template-columns: 70px 1fr; }
+            .cart-right-col { grid-column: span 2; flex-direction: row; justify-content: space-between; align-items: center; }
+            .footer-top { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <a href="index.html" class="logoimg"><img src="images/logo-colored.svg" alt="Brand Logo"></a>
+        <div class="icons">
+            <div class="header-icon"><i class="fa-regular fa-user"></i><span>Profile</span></div>
+            <div class="header-icon"><i class="fa-regular fa-comment"></i><span>Message</span></div>
+            <div class="header-icon"><i class="fa-regular fa-heart"></i><span>Orders</span></div>
+            <a href="cart.html" class="header-icon" style="position:relative;">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge" style="display:none;position:absolute;top:-6px;right:-10px;background:#E53935;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;">0</span>
+                <span>My cart</span>
+            </a>
+        </div>
+    </div>
+    <div class="header-bottom">
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fa-solid fa-bars"></i> All Category</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="product-detail.html">Hot Offers</a></li>
+            <li><a href="#">Gift Boxes</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Menu Items</a></li>
+            <li><span class="has-dropdown">Help <i class="fa-solid fa-chevron-down"></i></span></li>
+        </ul>
+    </div>
+</header>
+
+<div class="page-title-wrap">
+    <h1 id="cartTitle">My cart (0)</h1>
+</div>
+
+<div class="cart-layout">
+    <!-- CART ITEMS -->
+    <div class="cart-items-card" id="cartItemsCard">
+        <!-- rows injected by JS -->
+        <div class="empty-cart" id="emptyCartMsg" style="display:none;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Your cart is empty.
+            <div style="margin-top:10px;"><a href="index.html">Continue shopping →</a></div>
+        </div>
+        <div class="cart-actions-bar" id="cartActionsBar" style="display:none;">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to shop</a>
+            <span class="remove-all-link" onclick="removeAllItems()">Remove all</span>
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-card">
+        <div>
+            <label style="font-size:13px;color:#888;display:block;margin-bottom:8px;">Have a coupon?</label>
+            <div class="coupon-row">
+                <input type="text" placeholder="Enter coupon code" id="couponInput">
+                <button class="btn-apply-coupon" onclick="applyCoupon()">Apply</button>
+            </div>
+        </div>
+        <div class="summary-row"><span>Subtotal:</span><span id="subtotalVal">$0.00</span></div>
+        <div class="summary-row discount"><span>Discount:</span><span id="discountVal">- $0.00</span></div>
+        <div class="summary-row"><span>Tax:</span><span id="taxVal">+ $0.00</span></div>
+        <div class="summary-row total"><span>Total:</span><span id="totalVal">$0.00</span></div>
+        <button class="btn-checkout" id="checkoutBtn" onclick="checkoutNow()">Checkout</button>
+        <div class="pay-icons">
+            <i class="fa-brands fa-cc-visa"></i>
+            <i class="fa-brands fa-cc-mastercard"></i>
+            <i class="fa-brands fa-cc-paypal"></i>
+            <i class="fa-brands fa-cc-amex"></i>
+        </div>
+        <div class="trust-badges">
+            <div class="trust-badge"><i class="fa-solid fa-lock"></i> Secure payment</div>
+            <div class="trust-badge"><i class="fa-solid fa-headset"></i> Customer support</div>
+            <div class="trust-badge"><i class="fa-solid fa-truck"></i> Free delivery</div>
+        </div>
+    </div>
+</div>
+
+<!-- SAVED FOR LATER -->
+<div class="saved-section">
+    <h2>Saved for later</h2>
+    <div class="saved-grid" id="savedGrid">
+        <!-- rows injected by JS -->
+    </div>
+    <p id="savedEmptyMsg" style="font-size:13px;color:#888;display:none;">No items saved for later.</p>
+</div>
+
+<!-- DEALS BANNER -->
+<div class="deals-banner">
+    <div>
+        <h3>Super discount on more than 100 USD</h3>
+        <p>Have you ever finally just write dummy info</p>
+    </div>
+    <a href="product-detail.html" class="btn-shop-now">Shop now <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+    <h3>Subscribe on our newsletter</h3>
+    <p>Get daily news on upcoming offers from many suppliers all over the world</p>
+    <div class="newsletter-form">
+        <i class="fa-regular fa-envelope"></i>
+        <input type="email" placeholder="Email" id="newsletterEmail">
+        <button onclick="subscribeNewsletter()">Subscribe</button>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-top">
+        <div class="footer-brand">
+            <a href="index.html"><img src="images/logo-colored.svg" alt="Brand" style="height:46px;width:auto;"></a>
+            <p>Best information about the company gies here but now lorem ipsum is</p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="footer-col"><h4>About</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+        <div class="footer-col"><h4>Partnership</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+        <div class="footer-col"><h4>Information</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Money Refund</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact us</a></li></ul></div>
+        <div class="footer-col"><h4>For users</h4><ul><li><a href="#">Login</a></li><li><a href="#">Register</a></li><li><a href="#">Settings</a></li><li><a href="#">My Orders</a></li></ul></div>
+        <div class="footer-app">
+            <h4>Get app</h4>
+            <div class="app-badges">
+                <div class="app-badge"><i class="fa-brands fa-apple"></i><div class="app-badge-text"><span class="small">Download on the</span><span class="big">App Store</span></div></div>
+                <div class="app-badge"><i class="fa-brands fa-google-play"></i><div class="app-badge-text"><span class="small">GET IT ON</span><span class="big">Google Play</span></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2023 Ecommerce.</span>
+        <div class="lang-footer"><img src="https://flagcdn.com/w40/us.png" alt="US" style="width:22px;height:15px;object-fit:cover;border-radius:2px;"> English <i class="fa-solid fa-chevron-up"></i></div>
+    </div>
+</footer>
+
+<script>
+    const TAX_RATE = 0.0; // set to e.g. 0.07 for 7% tax if needed
+    let currentDiscount = 0;
+
+    function fmt(n) { return '$' + n.toFixed(2); }
+
+    function renderCart() {
+        const items = getCart();
+        const card = document.getElementById('cartItemsCard');
+        const emptyMsg = document.getElementById('emptyCartMsg');
+        const actionsBar = document.getElementById('cartActionsBar');
+
+        // remove old rows
+        card.querySelectorAll('.cart-row').forEach(r => r.remove());
+
+        const totalQty = items.reduce((s, i) => s + i.qty, 0);
+        document.getElementById('cartTitle').textContent = `My cart (${totalQty})`;
+
+        if (items.length === 0) {
+            emptyMsg.style.display = 'block';
+            actionsBar.style.display = 'none';
+        } else {
+            emptyMsg.style.display = 'none';
+            actionsBar.style.display = 'flex';
+            items.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'cart-row';
+                row.dataset.id = item.id;
+
+                const qtyOptions = [1,2,3,4,5,6,7,8,9,10].map(n =>
+                    `<option value="${n}" ${n === item.qty ? 'selected' : ''}>Qty: ${n}</option>`
+                ).join('');
+
+                row.innerHTML = `
+                    <div class="cart-img"><img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/90?text=Item'"></div>
+                    <div class="cart-info">
+                        <div class="name">${item.name}</div>
+                        ${item.variant ? `<div class="variant">${item.variant}</div>` : ''}
+                        <div class="seller">Seller: ${item.seller}</div>
+                        <div class="actions">
+                            <a class="remove-link" onclick="removeItem('${item.id}')">Remove</a>
+                            <a onclick="saveForLater('${item.id}')">Save for later</a>
+                        </div>
+                    </div>
+                    <div class="cart-right-col">
+                        <div class="cart-price">${fmt(item.price)}</div>
+                        <select class="qty-select" onchange="updateQty('${item.id}', this.value)">${qtyOptions}</select>
+                    </div>
+                `;
+                card.insertBefore(row, actionsBar);
+            });
+        }
+        renderSummary(items);
+    }
+
+    function renderSummary(items) {
+        const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+        const discount = currentDiscount;
+        const tax = (subtotal - discount) * TAX_RATE;
+        const total = Math.max(0, subtotal - discount + tax);
+
+        document.getElementById('subtotalVal').textContent = fmt(subtotal);
+        document.getElementById('discountVal').textContent = '- ' + fmt(discount);
+        document.getElementById('taxVal').textContent = '+ ' + fmt(tax);
+        document.getElementById('totalVal').textContent = fmt(total);
+
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        checkoutBtn.disabled = items.length === 0;
+    }
+
+    function updateQty(id, qty) {
+        const items = getCart();
+        const item = items.find(i => i.id === id);
+        if (item) item.qty = parseInt(qty);
+        setCart(items);
+        renderCart();
+    }
+
+    function removeItem(id) {
+        const items = getCart().filter(i => i.id !== id);
+        setCart(items);
+        renderCart();
+    }
+
+    function removeAllItems() {
+        setCart([]);
+        renderCart();
+    }
+
+    function saveForLater(id) {
+        const items = getCart();
+        const idx = items.findIndex(i => i.id === id);
+        if (idx === -1) return;
+        const item = items[idx];
+        items.splice(idx, 1);
+        setCart(items);
+
+        const saved = getSaved();
+        saved.push(item);
+        setSaved(saved);
+
+        renderCart();
+        renderSaved();
+    }
+
+    function renderSaved() {
+        const saved = getSaved();
+        const grid = document.getElementById('savedGrid');
+        const emptyMsg = document.getElementById('savedEmptyMsg');
+        grid.innerHTML = '';
+
+        if (saved.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+        }
+        emptyMsg.style.display = 'none';
+
+        saved.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'saved-card';
+            card.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+                <div class="s-price">${fmt(item.price)}</div>
+                <div class="s-name">${item.name}</div>
+                <button class="btn-move-cart" onclick="moveToCart('${item.id}')"><i class="fa-solid fa-cart-shopping"></i> Move to cart</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function moveToCart(id) {
+        const saved = getSaved();
+        const idx = saved.findIndex(i => i.id === id);
+        if (idx === -1) return;
+        const item = saved[idx];
+        saved.splice(idx, 1);
+        setSaved(saved);
+
+        const items = getCart();
+        const existing = items.find(i => i.name === item.name);
+        if (existing) { existing.qty += item.qty; }
+        else { items.push(item); }
+        setCart(items);
+
+        renderCart();
+        renderSaved();
+    }
+
+    function applyCoupon() {
+        const code = document.getElementById('couponInput').value.trim().toUpperCase();
+        if (!code) { alert('Please enter a coupon code.'); return; }
+        if (code === 'SAVE10') {
+            const items = getCart();
+            const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+            currentDiscount = subtotal * 0.10;
+            alert('Coupon applied! 10% discount.');
+        } else {
+            currentDiscount = 0;
+            alert('Invalid coupon code.');
+        }
+        renderSummary(getCart());
+    }
+
+    function checkoutNow() {
+        const items = getCart();
+        if (items.length === 0) return;
+        alert('Proceeding to checkout! (demo only)');
+    }
+
+    function subscribeNewsletter() {
+        const e = document.getElementById('newsletterEmail').value.trim();
+        if (e && e.includes('@')) { alert('Subscribed! Thank you.'); document.getElementById('newsletterEmail').value=''; }
+        else alert('Please enter a valid email.');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCart();
+        renderSaved();
+    });
+</script>
+</body>
+</html>
