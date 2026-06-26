@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail — Brand</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="js/cart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #F7FAFC; color: #1c1c1c; }
+        a { text-decoration: none !important; color: inherit; }
+
+        /* ══ HEADER  ══ */
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 20px clamp(16px,6vw,130px); border-bottom: 1px solid #e8e8e8; background: #fff; gap: 20px; flex-wrap: wrap; }
+        .logoimg img { height: 46px; width: auto; display: block; }
+        .search-bar { display: flex; align-items: center; border: 1.5px solid #0D6EFD; border-radius: 10px; overflow: hidden; flex: 1; max-width: 665px; height: 40px; min-width: 200px; }
+        .search-bar input { border: none; outline: none; padding: 0 10px; font-family: 'Inter', sans-serif; font-size: 16px; color: #555; flex: 1; min-width: 0; height: 40px; }
+        .search-bar .divider { width: 1px; height: 40px; background: #0D6EFD; flex-shrink: 0; }
+        .search-bar select { border: none; outline: none; padding: 0 10px; font-family: 'Inter', sans-serif; font-size: 16px; background: #fff; color: #1C1C1C; width: 145px; height: 40px; cursor: pointer; flex-shrink: 0; }
+        .search-bar button { background: #0D6EFD; color: #fff; border: none; padding: 0 20px; height: 40px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; flex-shrink: 0; transition: background 0.2s; }
+        .search-bar button:hover { background: #0b5ed7; }
+        .icons { display: flex; gap: clamp(12px,2vw,30px); flex-shrink: 0; }
+        .header-icon { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; color: #555; transition: color 0.2s; }
+        .header-icon:hover { color: #0D6EFD; }
+        .header-icon i { font-size: 20px; }
+        .header-icon span { font-size: 11px; }
+        .header-bottom { display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(16px,6vw,130px); border-bottom: 1px solid #e8e8e8; background: #fff; flex-wrap: wrap; gap: 8px; }
+        .nav-links { display: flex; align-items: center; gap: clamp(8px,1.5vw,25px); list-style: none; flex-wrap: wrap; }
+        .nav-links li a { color: #1C1C1C; font-size: clamp(13px,1.1vw,16px); font-weight: 500; transition: color 0.2s; white-space: nowrap; }
+        .nav-links li a:hover, .nav-links li a.active { color: #0D6EFD; }
+        .has-dropdown { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: clamp(13px,1.1vw,16px); font-weight: 500; white-space: nowrap; }
+        .header-right { display: flex; align-items: center; gap: clamp(12px,2vw,32px); }
+        .lang-select, .ship-select { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #333; font-size: clamp(13px,1.1vw,16px); font-weight: 500; white-space: nowrap; }
+        .lang-select i, .ship-select i { color: #888; font-size: 12px; }
+        .flag-img { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; vertical-align: middle; }
+
+        /* ══ BREADCRUMB ══ */
+        .breadcrumb { padding: 14px clamp(16px,3vw,40px); display: flex; align-items: center; gap: 8px; font-size: 13px; color: #888; background: #fff; border-bottom: 1px solid #e8e8e8; flex-wrap: wrap; }
+        .breadcrumb a { color: #888; }
+        .breadcrumb a:hover { color: #0D6EFD; }
+        .breadcrumb i { font-size: 11px; }
+        .breadcrumb span { color: #1c1c1c; font-weight: 500; }
+
+        /* ══ PRODUCT TOP SECTION ══ */
+        .product-top-wrap { display: grid; grid-template-columns: 420px 1fr 300px; gap: 20px; padding: 20px clamp(16px,3vw,40px); align-items: start; }
+
+        /* Gallery */
+        .gallery { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+        .gallery-main { width: 100%; height: 340px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; border-radius: 6px; overflow: hidden; }
+        .gallery-main img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .gallery-thumbs { display: flex; gap: 10px; flex-wrap: wrap; }
+        .gallery-thumb { width: 60px; height: 60px; border: 1.5px solid #e8e8e8; border-radius: 6px; overflow: hidden; cursor: pointer; flex-shrink: 0; transition: border-color 0.2s; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
+        .gallery-thumb.active { border-color: #0D6EFD; }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Info column */
+        .product-info { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+        .stock-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #00A651; font-weight: 500; }
+        .product-title { font-size: 22px; font-weight: 700; color: #1c1c1c; line-height: 1.35; }
+        .rating-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .rating-row .stars { color: #f59e0b; font-size: 15px; }
+        .rating-row .score { font-size: 14px; font-weight: 600; color: #1c1c1c; }
+        .rating-row .meta { font-size: 13px; color: #888; }
+        .price-tiers { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; padding: 14px 0; }
+        .price-tier-row { display: flex; align-items: baseline; gap: 10px; }
+        .price-tier-row .tier-price { font-size: 20px; font-weight: 700; color: #0D6EFD; }
+        .price-tier-row .tier-range { font-size: 13px; color: #888; }
+        .negotiable { font-size: 12px; color: #aaa; }
+        .spec-list { display: flex; flex-direction: column; gap: 8px; }
+        .spec-row { display: flex; font-size: 14px; gap: 6px; }
+        .spec-row .label { color: #888; min-width: 130px; }
+        .spec-row .value { color: #1c1c1c; font-weight: 500; }
+
+        /* Supplier column */
+        .supplier-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+        .supplier-avatar { width: 54px; height: 54px; border-radius: 50%; background: #0D6EFD; color: #fff; font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .supplier-name { font-size: 15px; font-weight: 600; color: #1c1c1c; }
+        .supplier-loc { font-size: 13px; color: #888; }
+        .supplier-tags { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #444; }
+        .supplier-tags i { color: #00A651; width: 16px; }
+        .btn-inquiry-detail { width: 100%; padding: 11px; background: #0D6EFD; color: #fff; border: none; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+        .btn-inquiry-detail:hover { background: #0b5ed7; }
+        .btn-profile { width: 100%; padding: 11px; background: #fff; color: #0D6EFD; border: 1px solid #0D6EFD; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn-profile:hover { background: #0D6EFD; color: #fff; }
+        .save-link { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #888; cursor: pointer; }
+        .save-link:hover { color: #e53935; }
+
+        /* ══ TABS SECTION ══ */
+        .tabs-wrap { margin: 0 clamp(16px,3vw,40px) 20px; background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+        .tabs-nav { display: flex; border-bottom: 1px solid #e8e8e8; overflow-x: auto; }
+        .tab-btn { padding: 16px 24px; font-size: 15px; font-weight: 500; color: #888; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; background: none; border-left: none; border-right: none; border-top: none; font-family: 'Inter', sans-serif; }
+        .tab-btn.active { color: #0D6EFD; border-bottom-color: #0D6EFD; }
+        .tab-content { padding: 24px clamp(16px,2vw,32px); display: none; }
+        .tab-content.active { display: block; }
+        .tab-content p { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 14px; }
+        .spec-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .spec-table td { padding: 10px 14px; font-size: 14px; border: 1px solid #e8e8e8; }
+        .spec-table td:first-child { background: #f7fafc; font-weight: 500; width: 160px; }
+        .feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .feature-list li { font-size: 14px; color: #444; display: flex; align-items: center; gap: 8px; }
+        .feature-list i { color: #00A651; }
+        .review-summary { font-size: 14px; color: #444; margin-bottom: 16px; }
+        .review-summary strong { color: #1c1c1c; }
+        .review-item { padding: 14px 0; border-top: 1px solid #f0f0f0; font-size: 14px; color: #555; }
+
+        /* ══ CAROUSEL SECTIONS  ══ */
+        .carousel-section { margin: 0 clamp(16px,3vw,40px) 20px; background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 20px clamp(16px,2vw,24px); }
+        .carousel-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+        .mini-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+        .mini-card { border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s; display: flex; flex-direction: column; gap: 8px; }
+        .mini-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .mini-card img { width: 100%; height: 110px; object-fit: contain; }
+        .mini-card .mini-name { font-size: 12px; color: #333; line-height: 1.4; min-height: 34px; }
+        .mini-card .mini-price { font-size: 13px; font-weight: 700; color: #1c1c1c; }
+
+        /* ══ DEALS BANNER ══ */
+        .detail-deals-banner { margin: 0 clamp(16px,3vw,40px) 20px; background: linear-gradient(135deg, #FF6F00, #FFA000); border-radius: 8px; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .detail-deals-banner h3 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .detail-deals-banner p { font-size: 14px; color: rgba(255,255,255,0.85); }
+        .btn-shop-now { padding: 12px 28px; background: #fff; color: #E65100; border: none; border-radius: 4px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-shop-now:hover { background: #E65100; color: #fff; }
+
+        /* ══ NEWSLETTER ══ */
+        .newsletter { margin: 0 clamp(16px,3vw,40px) 20px; background: #F7F7F7; border: 1px solid #e8e8e8; border-radius: 8px; padding: 32px 40px; text-align: center; }
+        .newsletter h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .newsletter p { font-size: 14px; color: #888; margin-bottom: 20px; }
+        .newsletter-form { display: flex; align-items: center; max-width: 440px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; background: #fff; }
+        .newsletter-form i { padding: 0 12px; color: #aaa; font-size: 15px; }
+        .newsletter-form input { flex: 1; border: none; outline: none; padding: 11px 0; font-size: 14px; font-family: 'Inter', sans-serif; }
+        .newsletter-form button { padding: 11px 24px; background: #0D6EFD; color: #fff; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+        .newsletter-form button:hover { background: #0b5ed7; }
+
+        /* ══ FOOTER ══ */
+        footer { background: #fff; border-top: 1px solid #e8e8e8; }
+        .footer-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1.4fr; gap: clamp(16px,2vw,32px); padding: 40px clamp(16px,8vw,130px); }
+        .footer-brand p { font-size: 16px; line-height: 24px; color: #505050; margin-bottom: 18px; max-width: 200px; margin-top: 14px; }
+        .social-icons { display: flex; gap: 10px; }
+        .social-icons a { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #BDC4CD; background: #BDC4CD; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 14px; transition: background 0.2s, color 0.2s; }
+        .social-icons a:hover { background: #0D6EFD; border-color: #0D6EFD; color: #fff; }
+        .footer-col h4 { font-size: 16px; font-weight: 600; color: #1C1C1C; margin-bottom: 10px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { font-size: 16px; color: #8B96A5; transition: color 0.2s; }
+        .footer-col ul li a:hover { color: #0D6EFD; }
+        .footer-app h4 { font-size: 16px; font-weight: 600; color: #1C1C1C; margin-bottom: 16px; }
+        .app-badges { display: flex; flex-direction: column; gap: 10px; }
+        .app-badge { display: flex; align-items: center; gap: 10px; background: #111; color: #fff; border-radius: 8px; padding: 9px 16px; width: 160px; cursor: pointer; transition: background 0.2s; }
+        .app-badge:hover { background: #333; }
+        .app-badge i { font-size: 22px; }
+        .app-badge-text { display: flex; flex-direction: column; }
+        .app-badge-text .small { font-size: 10px; opacity: 0.8; }
+        .app-badge-text .big { font-size: 13px; font-weight: 600; }
+        .footer-bottom { background: #DEE2E7; display: flex; align-items: center; justify-content: space-between; padding: 20px clamp(16px,8vw,130px); color: #606060; font-size: 16px; flex-wrap: wrap; gap: 10px; }
+        .lang-footer { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+        @media (max-width: 1100px) {
+            .product-top-wrap { grid-template-columns: 1fr; }
+            .mini-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .footer-top { grid-template-columns: repeat(3, 1fr); }
+            .mini-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .footer-top { grid-template-columns: repeat(2, 1fr); }
+            .mini-grid { grid-template-columns: repeat(2, 1fr); }
+            .search-bar select, .search-bar .divider { display: none; }
+            .gallery-main { height: 240px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <a href="index.html" class="logoimg"><img src="images/logo-colored.svg" alt="Brand Logo"></a>
+        <div class="search-bar">
+            <input type="text" placeholder="Search" id="searchinput">
+            <div class="divider"></div>
+            <select>
+                <option>All Categories</option>
+                <option>Mobile Accessory</option>
+                <option>Electronics</option>
+                <option>Smartphones</option>
+                <option>Modern tech</option>
+            </select>
+            <button onclick="handlesearch()">Search</button>
+        </div>
+        <div class="icons">
+            <div class="header-icon"><i class="fa-regular fa-user"></i><span>Profile</span></div>
+            <div class="header-icon"><i class="fa-regular fa-comment"></i><span>Message</span></div>
+            <div class="header-icon"><i class="fa-regular fa-heart"></i><span>Orders</span></div>
+            <a href="cart.html" class="header-icon" style="position:relative;text-decoration:none;">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge" style="display:none;position:absolute;top:-6px;right:-10px;background:#E53935;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;">0</span>
+                <span>My cart</span>
+            </a>
+        </div>
+    </div>
+    <div class="header-bottom">
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fa-solid fa-bars"></i> All Category</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="product-listing.html">Hot Offers</a></li>
+            <li><a href="#">Gift Boxes</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Menu Items</a></li>
+            <li><span class="has-dropdown">Help <i class="fa-solid fa-chevron-down"></i></span></li>
+        </ul>
+        <div class="header-right">
+            <div class="lang-select">English, USD <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="ship-select">Ship to <img class="flag-img" src="https://flagcdn.com/w40/de.png" alt="DE"> <i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+    </div>
+</header>
+
+<div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    <a href="product-listing.html">Clothings</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    <a href="product-listing.html">Men's wear</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    <span>Summer clothing</span>
+</div>
+
+<div class="product-top-wrap">
+    <!-- GALLERY -->
+    <div class="gallery">
+        <div class="gallery-main">
+            <img id="mainImg" src="images/shoes.jpg" alt="Product main image" onerror="this.src='https://via.placeholder.com/340?text=Product'">
+        </div>
+        <div class="gallery-thumbs" id="thumbRow">
+            <div class="gallery-thumb active" onclick="setMain(this,'images/shoes.jpg')"><img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/60?text=1'"></div>
+            <div class="gallery-thumb" onclick="setMain(this,'images/product-thumb-2.png')"><img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/60?text=2'"></div>
+            <div class="gallery-thumb" onclick="setMain(this,'images/product-thumb-3.png')"><img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/60?text=3'"></div>
+            <div class="gallery-thumb" onclick="setMain(this,'images/product-thumb-4.png')"><img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/60?text=4'"></div>
+            <div class="gallery-thumb" onclick="setMain(this,'images/product-thumb-5.png')"><img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/60?text=5'"></div>
+            <div class="gallery-thumb" onclick="setMain(this,'images/product-thumb-6.png')"><img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/60?text=6'"></div>
+        </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="product-info">
+        <span class="stock-badge"><i class="fa-solid fa-circle-check"></i> In stock</span>
+        <h1 class="product-title" id="productTitle">Mens Long Shoes Lather Shine</h1>
+        <div class="rating-row">
+            <span class="stars">★★★★★</span>
+            <span class="score">9.3</span>
+            <span class="meta"><i class="fa-regular fa-comment"></i> 32 reviews</span>
+            <span class="meta"><i class="fa-solid fa-bag-shopping"></i> 154 sold</span>
+        </div>
+        <div class="price-tiers">
+            <div class="price-tier-row"><span class="tier-price">$98.00</span><span class="tier-range">50–100 pcs</span></div>
+            <div class="price-tier-row"><span class="tier-price">$90.00</span><span class="tier-range">100–700 pcs</span></div>
+            <div class="price-tier-row"><span class="tier-price">$78.00</span><span class="tier-range">700+ pcs</span></div>
+            <span class="negotiable">Price: Negotiable</span>
+        </div>
+        <div class="spec-list">
+            <div class="spec-row"><span class="label">Type:</span><span class="value">Classic shoes</span></div>
+            <div class="spec-row"><span class="label">Material:</span><span class="value">Plastic material</span></div>
+            <div class="spec-row"><span class="label">Design:</span><span class="value">Modern nice</span></div>
+            <div class="spec-row"><span class="label">Customization:</span><span class="value">Customized logo and design custom packages</span></div>
+            <div class="spec-row"><span class="label">Protection:</span><span class="value">Refund Policy</span></div>
+            <div class="spec-row"><span class="label">Warranty:</span><span class="value">2 years full warranty</span></div>
+        </div>
+    </div>
+
+    <!-- SUPPLIER -->
+    <div class="supplier-card">
+        <div class="supplier-avatar">R</div>
+        <div>
+            <div class="supplier-name">Guanjoi Trading LLC</div>
+            <div class="supplier-loc">Germany, Berlin</div>
+        </div>
+        <div class="supplier-tags">
+            <span><i class="fa-solid fa-circle-check"></i> Verified Seller</span>
+            <span><i class="fa-solid fa-globe"></i> Worldwide shipping</span>
+        </div>
+        <button class="btn-inquiry-detail" id="addToCartBtn" onclick="handleAddToCartClick(this,{name:document.getElementById('productTitle').textContent,price:78.00,image:document.getElementById('mainImg').src,seller:'Guanjoi Trading LLC'})" style="background:#1c1c1c;"><i class="fa-solid fa-cart-shopping"></i> Add to cart</button>
+        <button class="btn-inquiry-detail">Send inquiry</button>
+        <button class="btn-profile">Seller's profile</button>
+        <span class="save-link" onclick="toggleSave(this)"><i class="fa-regular fa-heart"></i> Save for later</span>
+    </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="setTab(this,'tab-desc')">Description</button>
+        <button class="tab-btn" onclick="setTab(this,'tab-reviews')">Reviews</button>
+        <button class="tab-btn" onclick="setTab(this,'tab-shipping')">Shipping</button>
+        <button class="tab-btn" onclick="setTab(this,'tab-seller')">About seller</button>
+    </div>
+
+    <div class="tab-content active" id="tab-desc">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <table class="spec-table">
+            <tr><td>Model</td><td>#8786867</td></tr>
+            <tr><td>Style</td><td>Classic style</td></tr>
+            <tr><td>Certificate</td><td>ISO-898921212</td></tr>
+            <tr><td>Size</td><td>34mm x 450mm x 19mm</td></tr>
+            <tr><td>Memory</td><td>36GB RAM</td></tr>
+        </table>
+        <ul class="feature-list">
+            <li><i class="fa-solid fa-check"></i> Some great feature name here</li>
+            <li><i class="fa-solid fa-check"></i> Lorem ipsum dolor sit amet, consectetur</li>
+            <li><i class="fa-solid fa-check"></i> Duis aute irure dolor in reprehenderit</li>
+            <li><i class="fa-solid fa-check"></i> Some great feature name here</li>
+        </ul>
+    </div>
+
+    <div class="tab-content" id="tab-reviews">
+        <p class="review-summary">Customer reviews will appear here. Average rating: <strong>9.3/10</strong> based on 32 reviews.</p>
+        <div class="review-item">Excellent product quality and fast delivery. Highly recommended seller!</div>
+        <div class="review-item">Great packaging, matches the description, will order again.</div>
+    </div>
+
+    <div class="tab-content" id="tab-shipping">
+        <p>Worldwide shipping available. Standard delivery: 7–14 business days. Express delivery: 3–5 business days.</p>
+        <p>Free shipping on orders over $100. Tracking number provided within 24 hours of dispatch.</p>
+    </div>
+
+    <div class="tab-content" id="tab-seller">
+        <p><strong>Guanjoi Trading LLC</strong> — Verified seller based in Germany, Berlin. Operating since 2015 with over 10,000 satisfied customers worldwide.</p>
+        <p>Specializes in clothing, accessories, and electronics. 100% refund policy on all orders.</p>
+    </div>
+</div>
+
+
+<div class="carousel-section">
+    <h2>You may like</h2>
+    <div class="mini-grid">
+        <a class="mini-card" href="product.html">
+            <img src="images/shoes.jpg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Men Blazers Sets Elegant Formal</div>
+            <div class="mini-price">$7.00 – $99.50</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/tshirt.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Men Shirt Sleeve Polo Contrast</div>
+            <div class="mini-price">$7.00 – $99.50</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/watch.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Apple Watch Series Space Gray</div>
+            <div class="mini-price">$7.00 – $99.50</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/shorts.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Basketball Crew Socks Long Stuff</div>
+            <div class="mini-price">$7.00 – $99.50</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/wallet.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">New Summer Men's Casual T-Shirts</div>
+            <div class="mini-price">$7.00 – $99.50</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/jacket.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Slim Fit Cotton Casual Jacket</div>
+            <div class="mini-price">$7.00 – $99.50</div>
+        </a>
+    </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="carousel-section">
+    <h2>Related products</h2>
+    <div class="mini-grid">
+        <a class="mini-card" href="product.html">
+            <img src="images/mobile.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Xiaomi Redmi 8 Original</div>
+            <div class="mini-price">$32.00 – $40.00</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/mobile3.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Xiaomi Redmi 8 Original</div>
+            <div class="mini-price">$32.00 – $40.00</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/mobilered.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Xiaomi Redmi 8 Original</div>
+            <div class="mini-price">$32.00 – $40.00</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/laptop.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Xiaomi Redmi 8 Original</div>
+            <div class="mini-price">$32.00 – $40.00</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/watch.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Xiaomi Redmi 8 Original</div>
+            <div class="mini-price">$32.00 – $40.00</div>
+        </a>
+        <a class="mini-card" href="product.html">
+            <img src="images/headphones.svg" alt="" onerror="this.src='https://via.placeholder.com/140?text=Item'">
+            <div class="mini-name">Xiaomi Redmi 8 Original</div>
+            <div class="mini-price">$32.00 – $40.00</div>
+        </a>
+    </div>
+</div>
+
+<!-- DEALS BANNER -->
+<div class="detail-deals-banner">
+    <div>
+        <h3>Super discount on more than 100 USD</h3>
+        <p>Have you ever finally just write dummy info</p>
+    </div>
+    <a href="product-listing.html" class="btn-shop-now">Shop now <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+    <h3>Subscribe on our newsletter</h3>
+    <p>Get daily news on upcoming offers from many suppliers all over the world</p>
+    <div class="newsletter-form">
+        <i class="fa-regular fa-envelope"></i>
+        <input type="email" placeholder="Email" id="newsletterEmail">
+        <button onclick="subscribeNewsletter()">Subscribe</button>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-top">
+        <div class="footer-brand">
+            <a href="index.html"><img src="images/logo-colored.svg" alt="Brand" style="height:46px;width:auto;"></a>
+            <p>Best information about the company gies here but now lorem ipsum is</p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="footer-col"><h4>About</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+        <div class="footer-col"><h4>Partnership</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+        <div class="footer-col"><h4>Information</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Money Refund</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact us</a></li></ul></div>
+        <div class="footer-col"><h4>For users</h4><ul><li><a href="#">Login</a></li><li><a href="#">Register</a></li><li><a href="#">Settings</a></li><li><a href="#">My Orders</a></li></ul></div>
+        <div class="footer-app">
+            <h4>Get app</h4>
+            <div class="app-badges">
+                <div class="app-badge"><i class="fa-brands fa-apple"></i><div class="app-badge-text"><span class="small">Download on the</span><span class="big">App Store</span></div></div>
+                <div class="app-badge"><i class="fa-brands fa-google-play"></i><div class="app-badge-text"><span class="small">GET IT ON</span><span class="big">Google Play</span></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2023 Ecommerce.</span>
+        <div class="lang-footer"><img src="https://flagcdn.com/w40/us.png" alt="US" style="width:22px;height:15px;object-fit:cover;border-radius:2px;"> English <i class="fa-solid fa-chevron-up"></i></div>
+    </div>
+</footer>
+
+<script>
+    function handlesearch() {
+        const q = document.getElementById('searchinput').value.trim();
+        if (q) window.location.href = 'product-listing.html?q=' + encodeURIComponent(q);
+    }
+    document.getElementById('searchinput').addEventListener('keyup', e => { if(e.key==='Enter') handlesearch(); });
+
+    function setMain(thumbEl, imgSrc) {
+        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+        thumbEl.classList.add('active');
+        document.getElementById('mainImg').src = imgSrc;
+    }
+
+    function setTab(btn, tabId) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+    }
+
+    function toggleSave(el) {
+        el.classList.toggle('active');
+        const icon = el.querySelector('i');
+        icon.classList.toggle('fa-regular');
+        icon.classList.toggle('fa-solid');
+    }
+
+    function subscribeNewsletter() {
+        const e = document.getElementById('newsletterEmail').value.trim();
+        if(e && e.includes('@')) { alert('Subscribed! Thank you.'); document.getElementById('newsletterEmail').value=''; }
+        else alert('Please enter a valid email.');
+    }
+</script>
+</body>
+</html>
